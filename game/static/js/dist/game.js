@@ -1,11 +1,6 @@
-class AcGame {
+class Game {
     constructor(id) {
-        this.id = id;
-        this.$ac_game = $('#' + id);
-        this.menu = new AcGameMenu(this);
-        this.playground = new AcGamePlayground(this);
-
-        this.start();
+        console.log("create ac game");
     }
 
     start() {
