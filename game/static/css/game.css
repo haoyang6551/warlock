@@ -3,7 +3,7 @@
     height: 100%;
     background-image: url("https://tva1.sinaimg.cn/large/008i3skNly1gwz6udknyag30hs0a0x6q.gif");
     background-size: 100% 100%;
-    user-select: none;
+    -webkit-user-select: none;
 }
 
 .game-menu-field {
@@ -32,3 +32,8 @@
     transition: 100ms;
 }
 
+.game-playground {
+    width: 100%;
+    height: 100%;
+    -webkit-user-select: none;
+}

@@ -4,12 +4,12 @@
     <link rel="stylesheet" href="https://cdn.acwing.com/static/jquery-ui-dist/jquery-ui.min.css">
     <script src="https://cdn.acwing.com/static/jquery/js/jquery-3.3.1.min.js"></script>
     <link rel="stylesheet" href="{% static 'css/game.css' %}">
-    <script src="{% static 'js/dist/game.js' %}"></script>
 </head>
 
 <body style="margin: 0">
     <div id="game_12345678"></div>
-    <script>
+    <script type="module">
+        import {Game} from "{% static 'js/dist/game.js' %}";
         $(document).ready(function(){
             let yh_game = new Game("game_12345678");
         });

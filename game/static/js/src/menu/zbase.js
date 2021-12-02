@@ -16,13 +16,13 @@ class GameMenu {
             设置
         </div>
     </div>
+
 </div>
 `);
         this.root.$yh_game_id.append(this.$menu);
         this.$single_mode = this.$menu.find('.game-menu-field-item-single-mode');
         this.$multi_mode = this.$menu.find('.game-menu-field-item-multi-mode');
         this.$settings = this.$menu.find('.game-menu-field-item-settings');
-
         this.start();
     }
 
