@@ -17,6 +17,7 @@ class Player extends GameObject {
         this.is_me = is_me;
         this.eps = 0.1;
         this.friction = 0.9;
+        this.spent_time = 0.0;
 
 
         this.cur_skill = null;
@@ -110,10 +111,14 @@ class Player extends GameObject {
     }
 
     update() {
-        if (Math.random() < 1 / 180.0) {
+        this.spent_time += this.timedelta / 1000;
+        if (this.spent_time > 5 && Math.random() < 1 / 180.0) {
             let player = this.playground.players[0];
-            if (this != player)
-                this.shoot_fireball(player.x, player.y);
+            if (this != player) {
+                let tx = player.x + player.speed * player.vx * this.timedelta / 1000 * 0.3;
+                let ty = player.y + player.speed * player.vy * this.timedelta / 1000 * 0.3;
+                this.shoot_fireball(tx, ty);
+            }
         }
         if (this.damage_speed > 10) {
             this.vx = this.vy = 0;
