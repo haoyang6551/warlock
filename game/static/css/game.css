@@ -1,3 +1,120 @@
+.game-settings {
+    width: 100%;
+    height: 100%;
+    background-image: url("https://tva1.sinaimg.cn/large/008i3skNly1gx41y3opeag30m80c04qr.gif");
+    background-size: 100% 100%;
+    -webkit-user-select: none;
+}
+
+.game-settings-title {
+    color: white;
+    font-size: 3vh;
+    text-align: center;
+    height: 7vh;
+    padding-top: 2vh;
+    margin-bottom: 2vh;
+}
+
+.game-settings-username {
+    display: block;
+    height: 7vh;
+}
+
+.game-settings-password {
+    display: block;
+    height: 7vh;
+}
+
+.game-settings-submit {
+    display: block;
+    height: 7vh;
+}
+
+.game-settings-item {
+    width: 100%;
+    height: 100%;
+}
+
+.game-settings-item > input {
+    width: 90%;
+    line-height: 3vh;
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.game-settings-item > button {
+    font-size: 2vh;
+    color: white;
+    width: 90%;
+    line-height: 3vh;
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #4CAF50;
+    border-radius: 5px;
+}
+
+.game-settings-error-message {
+    color: red;
+    font-size: 1vh;
+    display: inline;
+    float: left;
+    padding-left: 2vw;
+}
+
+.game-settings-option {
+    color: white;
+    font-size: 2vh;
+    display: inline;
+    float: right;
+    padding-right: 2vw;
+    cursor: pointer;
+}
+
+
+
+.IPC {
+    position:absolute;
+    right:0px;
+    bottom:0px;
+    display:block;
+    width:100%;
+    font-size: 1vh;
+    text-align: center;
+    background-color: rgba(39,21,28, 0.2);
+}
+
+.game-settings-login {
+    height: 41vh;
+    width: 20vw;
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+
+
+}
+
+.game-settings-register {
+    height: 49vh;
+    width: 20vw;
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+}
+
+
+
+
+
 .game-menu {
     width: 100%;
     height: 100%;
@@ -36,3 +153,5 @@
     height: 100%;
     -webkit-user-select: none;
 }
+
+
