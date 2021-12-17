@@ -35,13 +35,13 @@ class GameMenu {
         let outer = this;
         this.$single_mode.click(function(){
             outer.hide();
-            outer.root.playground.show();
+            outer.root.playground.show("single mode");
         });
         this.$multi_mode.click(function(){
-            console.log("click multi mode");
+            outer.hide();
+            outer.root.playground.show("multi mode");
         });
         this.$settings.click(function(){
-            console.log("click settings");
             outer.root.settings.logout_on_remote();
         });
     }
@@ -190,7 +190,7 @@ class Particle extends GameObject {
 
 }
 class Player extends GameObject {
-    constructor(playground, x, y, radius, color, speed, is_me) {
+    constructor(playground, x, y, radius, color, speed, character, username, photo) {
         super();
         this.playground = playground;
         this.ctx = this.playground.game_map.ctx;
@@ -205,7 +205,9 @@ class Player extends GameObject {
         this.radius = radius;
         this.color = color;
         this.speed = speed;
-        this.is_me = is_me;
+        this.character = character;
+        this.username = username;
+        this.photo = photo;
         this.eps = 0.01;
         this.friction = 0.9;
         this.spent_time = 0.0;
@@ -213,14 +215,14 @@ class Player extends GameObject {
 
         this.cur_skill = null;
 
-        if (this.is_me) {
+        if (this.character !== "robot") {
             this.img = new Image();
-            this.img.src = this.playground.root.settings.photo;
+            this.img.src = this.photo;
         }
     }
 
     start() {
-        if (this.is_me)
+        if (this.character === "me")
         {
             this.add_listening_events();
         } else {
@@ -332,7 +334,7 @@ class Player extends GameObject {
             if (this.move_length < this.eps) {
                 this.move_length = 0;
                 this.vx = this.vy = 0;
-                if (!this.is_me) {
+                if (this.character === "robot") {
                     let tx = Math.random() * this.playground.width / this.playground.scale;
                     let ty = Math.random() * this.playground.height / this.playground.scale;
                     this.move_to(tx, ty);
@@ -348,7 +350,7 @@ class Player extends GameObject {
 
     render() {
         let scale = this.playground.scale;
-        if (this.is_me) {
+        if (this.character !== "robot") {
             this.ctx.save();
             this.ctx.beginPath();
             this.ctx.arc(this.x * scale, this.y * scale, this.radius * scale, 0, Math.PI * 2, false);
@@ -479,23 +481,27 @@ class GamePlayground {
 
     }
 
-    show() {    // 打开playground界面
+    show(mode) {    // 打开playground界面
         this.$playground.show();
-        this.resize();
         this.width = this.$playground.width();
         this.height = this.$playground.height();
         this.game_map = new GameMap(this);
+        this.resize();
         this.players = [];
-        this.players.push(new Player(this, this.width * 0.5  / this.scale, this.height * 0.5 / this.scale, this.height * 0.05 / this.scale, "white", this.height * 0.15 / this.scale, true));
+        this.players.push(new Player(this, this.width * 0.5  / this.scale, this.height * 0.5 / this.scale, this.height * 0.05 / this.scale, "white", this.height * 0.15 / this.scale, "me", this.root.settings.username, this.root.settings.photo));
 
-        for (let i = 0; i < 5; i ++) {
-            this.players.push(new Player(this, this.width * Math.random() / this.scale, this.height * Math.random() / this.scale, this.height * 0.05/ this.scale, this.get_random_color(), this.height * 0.15 / this.scale, false));
+        if (mode === "single mode") {
+            for (let i = 0; i < 5; i ++) {
+                this.players.push(new Player(this, this.width * Math.random() / this.scale, this.height * Math.random() / this.scale, this.height * 0.05/ this.scale, this.get_random_color(), this.height * 0.15 / this.scale, "robot"));
+            }
+        } else if (mode === "multi mode") {
+
         }
     }
 
     hide() {    // 关闭playground界面
         this.$playground.hide();
-    }
+   }
 }
 class Settings {
     constructor(root) {
