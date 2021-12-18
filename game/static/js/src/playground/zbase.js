@@ -43,14 +43,19 @@ class GamePlayground {
         this.players = [];
         this.players.push(new Player(this, this.width * 0.5  / this.scale, this.height * 0.5 / this.scale, this.height * 0.05 / this.scale, "white", this.height * 0.15 / this.scale, "me", this.root.settings.username, this.root.settings.photo));
 
+        console.log("bug bug");
+
         if (mode === "single mode") {
             for (let i = 0; i < 5; i ++) {
                 this.players.push(new Player(this, this.width * Math.random() / this.scale, this.height * Math.random() / this.scale, this.height * 0.05/ this.scale, this.get_random_color(), this.height * 0.15 / this.scale, "robot"));
             }
         } else if (mode === "multi mode") {
+            this.mps = new MultiPlayerSocket(this);
 
         }
     }
 
     hide() {    // 关闭playground界面
         this.$playground.hide()
+    }
+}
