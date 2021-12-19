@@ -35,6 +35,7 @@ class GamePlayground {
     }
 
     show(mode) {    // 打开playground界面
+        let outer = this;
         this.$playground.show();
         this.width = this.$playground.width();
         this.height = this.$playground.height();
@@ -43,7 +44,6 @@ class GamePlayground {
         this.players = [];
         this.players.push(new Player(this, this.width * 0.5  / this.scale, this.height * 0.5 / this.scale, this.height * 0.05 / this.scale, "white", this.height * 0.15 / this.scale, "me", this.root.settings.username, this.root.settings.photo));
 
-        console.log("bug bug");
 
         if (mode === "single mode") {
             for (let i = 0; i < 5; i ++) {
@@ -51,6 +51,11 @@ class GamePlayground {
             }
         } else if (mode === "multi mode") {
             this.mps = new MultiPlayerSocket(this);
+            this.mps.uuid = this.players[0].uuid;
+
+            this.mps.ws.onopen = function() {
+                outer.mps.send_create_player(outer.root.settings.username, outer.root.settings.photo);
+            };
 
         }
     }

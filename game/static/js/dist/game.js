@@ -63,6 +63,18 @@ class GameObject {
         GAME_OBJECTS.push(this);
         this.has_called_start = false;          // 是否执行过start函数
         this.timedelta = 0;                     // 当前帧距离上一帧的时间间隔，单位是ms
+        this.uuid = this.create_uuid();
+
+        console.log(this.uuid);
+    }
+
+    create_uuid() {
+        let res = "";
+        for (let i = 0; i < 16; i ++) {
+            let x = parseInt(Math.floor(Math.random() * 10));
+            res += x;
+        }
+        return res;
     }
 
     start() {                                   // 只会在第一帧执行一次
@@ -225,7 +237,7 @@ class Player extends GameObject {
         if (this.character === "me")
         {
             this.add_listening_events();
-        } else {
+        } else if (this.character === "robot") {
             let tx = Math.random() * this.playground.width / this.playground.scale;
             let ty = Math.random() * this.playground.height / this.playground.scale;
             this.move_to(tx, ty);
@@ -317,8 +329,7 @@ class Player extends GameObject {
     update_move() {
         this.spent_time += this.timedelta / 1000;
         if (this.spent_time > 2  && Math.random() < 1 / 180.0) {
-            let player = this.playground.players[0];
-            if (this != player) {
+            if (this.character === "robot") {
                 let tx = player.x + player.speed * player.vx * this.timedelta / 1000 * 0.3;
                 let ty = player.y + player.speed * player.vy * this.timedelta / 1000 * 0.3;
                 this.shoot_fireball(tx, ty);
@@ -454,8 +465,52 @@ class MultiPlayerSocket {
     }
 
     start() {
+        this.receive();
 
     }
+
+    receive() {
+        let outer = this;
+        this.ws.onmessage = function(e) {
+            let data = JSON.parse(e.data);
+            let uuid = data.uuid;
+            if (uuid === outer.uuid) return false;
+
+            let event = data.event;
+            if (event === "create_player") {
+                outer.receive_create_player(uuid, data.username, data.photo);
+            }
+        };
+    }
+
+    send_create_player(username, photo) {
+        let outer = this;
+        this.ws.send(JSON.stringify({
+            'event': "create_player",
+            'uuid': outer.uuid,
+            'username': username,
+            'photo': photo,
+        }));
+    }
+
+    receive_create_player(uuid, username, photo) {
+        let player = new Player(
+            this.playground,
+            this.playground.width * 0.5  / this.playground.scale,
+            0.5,
+            0.05,
+            "white",
+            0.15,
+            "enemy",
+            username,
+            photo
+        );
+        player.uuid = uuid;
+        this.playground.players.push(player);
+    }
+
+
+
 }
 class GamePlayground {
     constructor(root) {
@@ -494,6 +549,7 @@ class GamePlayground {
     }
 
     show(mode) {    // 打开playground界面
+        let outer = this;
         this.$playground.show();
         this.width = this.$playground.width();
         this.height = this.$playground.height();
@@ -502,7 +558,6 @@ class GamePlayground {
         this.players = [];
         this.players.push(new Player(this, this.width * 0.5  / this.scale, this.height * 0.5 / this.scale, this.height * 0.05 / this.scale, "white", this.height * 0.15 / this.scale, "me", this.root.settings.username, this.root.settings.photo));
 
-        console.log("bug bug");
 
         if (mode === "single mode") {
             for (let i = 0; i < 5; i ++) {
@@ -510,6 +565,11 @@ class GamePlayground {
             }
         } else if (mode === "multi mode") {
             this.mps = new MultiPlayerSocket(this);
+            this.mps.uuid = this.players[0].uuid;
+
+            this.mps.ws.onopen = function() {
+                outer.mps.send_create_player(outer.root.settings.username, outer.root.settings.photo);
+            };
 
         }
     }

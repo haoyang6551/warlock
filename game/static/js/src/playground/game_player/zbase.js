@@ -34,7 +34,7 @@ class Player extends GameObject {
         if (this.character === "me")
         {
             this.add_listening_events();
-        } else {
+        } else if (this.character === "robot") {
             let tx = Math.random() * this.playground.width / this.playground.scale;
             let ty = Math.random() * this.playground.height / this.playground.scale;
             this.move_to(tx, ty);
@@ -126,8 +126,7 @@ class Player extends GameObject {
     update_move() {
         this.spent_time += this.timedelta / 1000;
         if (this.spent_time > 2  && Math.random() < 1 / 180.0) {
-            let player = this.playground.players[0];
-            if (this != player) {
+            if (this.character === "robot") {
                 let tx = player.x + player.speed * player.vx * this.timedelta / 1000 * 0.3;
                 let ty = player.y + player.speed * player.vy * this.timedelta / 1000 * 0.3;
                 this.shoot_fireball(tx, ty);
