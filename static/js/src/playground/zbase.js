@@ -35,6 +35,8 @@ class GamePlayground {
     }
 
     show(mode) {    // 打开playground界面
+
+        this.mode = mode;
         let outer = this;
         this.$playground.show();
         this.width = this.$playground.width();

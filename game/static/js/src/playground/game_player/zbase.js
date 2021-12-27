@@ -49,7 +49,12 @@ class Player extends GameObject {
         this.playground.game_map.$canvas.mousedown(function(e){
             const rect = outer.ctx.canvas.getBoundingClientRect();
             if (e.which === 3) {
-                outer.move_to((e.clientX - rect.left) / outer.playground.scale, (e.clientY - rect.top) / outer.playground.scale);
+                let tx = (e.clientX - rect.left) / outer.playground.scale;
+                let ty = (e.clientY - rect.top) / outer.playground.scale;
+                outer.move_to(tx, ty);
+                if (outer.playground.mode === "multi mode") {
+                    outer.playground.mps.send_move_to(tx, ty);
+                }
             } else if (e.which === 1) {
                 if (outer.cur_skill == "fireball") {
                     outer.shoot_fireball((e.clientX - rect.left) / outer.playground.scale, (e.clientY - rect.top) / outer.playground.scale);
@@ -126,6 +131,7 @@ class Player extends GameObject {
     update_move() {
         this.spent_time += this.timedelta / 1000;
         if (this.spent_time > 2  && Math.random() < 1 / 180.0) {
+            let player = this.playground.players[0];
             if (this.character === "robot") {
                 let tx = player.x + player.speed * player.vx * this.timedelta / 1000 * 0.3;
                 let ty = player.y + player.speed * player.vy * this.timedelta / 1000 * 0.3;
